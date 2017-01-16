@@ -1,0 +1,159 @@
+total de documentos = 70288
+
+===========================
+decisoes vazias = 12079
+decisoes nao vazias = 58209
+
+===========================
+negou provimento - 36145
+deu provimento - 1134
+rejeitou - 2000
+julgou procedente - 615
+julgou improcedente - 359
+negou-lhe provimento - 283
+não conheceu - 1980
+recebeu os embargos de declaração - 352
+não conheceu dos embargos de declaração - 349
+deferiu o pedido de habeas corpus
+Embargos de declaração rejeitados
+Negado provimento ao agravo
+
+===========================
+db.all.find({$and:[{decisao:{$ne:""}}, {decisao: {$not: /negou provimento/}}]}, {decisao:1, _id:0}).count()
+{decisao: {$not: /negou provimento/}} = not contains
+
+db.all.find({$and:[{decisao:{$ne:""}},
+{decisao: {$not: /negou provimento/i}},
+{decisao: {$not: /rejeitou/i}},
+{decisao: {$not: /não conheceu/i}},
+{decisao: {$not: /indeferiu/i}},
+{decisao: {$not: /deu provimento/i}},
+{decisao: {$not: /deferiu/i}},
+{decisao: {$not: /Negado/i}},
+{decisao: {$not: /Rejeitados/i}},
+{decisao: {$not: /Indeferida a ordem/i}},
+{decisao: {$not: /julgou procedente/i}},
+{decisao: {$not: /recebeu/i}},
+{decisao: {$not: /conheceu/i}},
+{decisao: {$not: /dado provimento/i}},
+{decisao: {$not: /julgou prejudicado/i}},
+{decisao: {$not: /nega provimento/i}},
+{decisao: {$not: /acolheu/i}}]}, {decisao:1, _id:0})
+.count()
+
+total de provimento = 29657
+decisoes = provimento positivo
+db.preprocessed.find({$and: [{decisao:/provimento/}, {decisao: {$not: /negou/}}, {decisao: {$not: /negado/}}, {decisao: {$not: /nega/}}]})
+968 positivos
+195 usado para treinamento
+773 utilizados para classificacao
+382 classificado pos 49% CORRETO
+391 classificado neg 51% ERRADO
+0.1 correto
+
+decisoes = provimento negativo
+db.preprocessed.find({$and: [{decisao:/provimento/}, {$or: [{decisao: /negou/}, {decisao: /negado/}, {decisao:  /nega/}]}]})
+28689 negativos
+5748 usado para treinamento
+22941 utilizados para classificacao
+247 classificado pos 1% ERRADO
+22694 classificado neg 99% CORRETO
+63.90 correto
+
+total de embargos 4692
+decisoes = embargos positivos
+db.preprocessed.find({$and: [{decisao:/embargos/}, {decisao: {$not: /rejeitou/}}, {decisao: {$not: /rejeitados/}}, {decisao: {$not: /negou/}}]})
+1232 positivos
+262 usado para treinamento
+970 utilizados para classificacao
+367 classificado pos 38% CORRETO
+603 classificado neg 62% ERRADO
+1.33 correto
+
+decisoes = embargos negativos
+db.preprocessed.find({$and: [{decisao:/embargos/}, {$or: [{decisao: /rejeitou/}, {decisao: /rejeitados/}, {decisao: /negou/}]}]})
+3460 negativos
+767 usado para treinamento
+2693 utilizados para classificacao
+140 classificado pos  5% ERRADO
+2553 classificado neg 95% CORRETO
+7.19 correto
+
+total de procedentes e improcedentes 1189
+db.preprocessed.find({$and: [{decisao:/procedente/}]})
+820 positivos
+178 usado para treinamento
+642 utilizados para classificacao
+634 classificado pos 99% CORRETO
+8 classificado neg 1% ERRADO
+1.78 correto
+
+
+db.preprocessed.find({$and: [{decisao:/improcedente/}]})
+369 negativos
+75 usado para treinamento
+294 utilizados para classificacao
+287 classificado pos 98% ERRADO
+7 classificado neg 2% CORRETO
+0.012 correto
+
+35538
+
+db.preprocessed.find({$and: [{decisao: {$not: /embargos/}}, {decisao: {$not: /provimento/}}, {decisao: {$not: /procedente/}}, {decisao: {$not: /improcedente/}}]}).count()
+o restante
+8276
+
+habeas corpus = positivo
+db.preprocessed.find({$and: [{decisao: /habeas corpus/}, {decisao: {$not: /negou/}}, {decisao: {$not: /negava/}}, {decisao: {$not: /julgou prejudicada/}}, {decisao: {$not: /denegado/}}, {decisao: {$not: /denegada/}}, {decisao: {$not: /indefer/}}]})
+2265 positivos
+453 usado para treinamento
+1812 utilizados para classificacao
+1647 classificado pos 91% CORRETO
+165 classificado neg 9% ERRADO
+4.63 correto
+
+habeas corpus = negativo
+db.preprocessed.find({$and: [{decisao: /habeas corpus/}, {$or: [{decisao: /negou/}, {decisao: /negava/}, {decisao: /julgou prejudicada/}, {decisao: /denegado/}, {decisao: /denegada/}, {decisao: /indefer/}]}]})
+2758 negativos
+579 usado para treinamento
+2179 utilizados para classificacao
+643 classificado pos 30% ERRADO
+1536 classificado neg 70% CORRETO
+4.32 correto
+
+positivo restante
+db.preprocessed.find({$and: [{decisao: {$not: /embargos/}}, {decisao: {$not: /provimento/}}, {decisao: {$not: /procedente/}}, {decisao: {$not: /improcedente/}}, {decisao: {$not: /habeas corpus/}}, {decisao: {$not: /indefer/}}, {decisao: {$not: /deneg/}}, {decisao: {$not: /desprovi/}}]})
+2497 positivos
+500 usado para treinamento
+1997 utilizados para classificacao
+1302 classificado pos 65% CORRETO
+695 classificado neg 35% ERRADO
+3.66 correto
+
+negativo restante
+db.preprocessed.find({$and: [{decisao: {$not: /embargos/}}, {decisao: {$not: /provimento/}}, {decisao: {$not: /procedente/}}, {decisao: {$not: /improcedente/}}, {decisao: {$not: /habeas corpus/}}, {$or: [{decisao: /indefer/}, {decisao: /deneg/}, {decisao: /desprovi/}]}]})
+1513 negativos
+302 usado para treinamento
+1211 utilizados para classificacao
+216 classificado pos 17% ERRADO
+995 classificado neg 83% CORRETO
+2.80
+
+total de decisoes treinadas previamente 8379
+
+35512 total usado para classificado
+
+6179 deveria ser classificado como positivo
+4332 classificado positivo corretamente
+
+29332 deveria ser classificado como negativo
+27785 classificado negativo corretamente
+
+Accuracy = (4332 + 27785) / 35512 = 90.4%
+ref: https://en.wikipedia.org/wiki/Evaluation_of_binary_classifiers
+
+12.19% da base classificado positivo corretamente
+78.24% da base classificado negativo corretamente
+
+17.4% da base deveria ser positivo
+82.6% da base deveria ser negativo
